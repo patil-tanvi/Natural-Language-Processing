@@ -26,8 +26,8 @@ def getBigramProb(bigramFreq, unigramFrequency):
     for key1 in bigramFreq.keys():
         word1 = key1.split()[0]
         count = bigramFreq.get(key1)
-#         bigramFreqProb[key1] = float(count) / float(unigramFrequency.get(word1))
-        bigramFreqProb[key1] = math.log(float(count)) - math.log(float(unigramFrequency.get(word1)))
+        bigramFreqProb[key1] = float(count) / float(unigramFrequency.get(word1))
+#         bigramFreqProb[key1] = math.log(float(count)) - math.log(float(unigramFrequency.get(word1)))
     return bigramFreqProb
 
 def getBigramLaplaceProb(bigramFreq, unigramFrequency):
@@ -38,7 +38,11 @@ def getBigramLaplaceProb(bigramFreq, unigramFrequency):
     for key1 in bigramFreq.keys():
         word1 = key1.split()[0]
         count = bigramFreq.get(key1) + smoothingCount
-#         bigramFreqProb[key1] = float(count) / float(unigramFrequency.get(word1) + vocabulary)
-        bigramFreqProb[key1] = math.log(float(count)) - math.log(float(unigramFrequency.get(word1) + vocabulary))
+        bigramFreqProb[key1] = float(count) / float(unigramFrequency.get(word1) + vocabulary)
+#         bigramFreqProb[key1] = math.log(float(count)) - math.log(float(unigramFrequency.get(word1) + vocabulary))
     return bigramFreqProb
- 
+
+def getFreqOfFreq(bigramFrequency):
+    
+    freqOfFreq = dict()
+    return freqOfFreq
