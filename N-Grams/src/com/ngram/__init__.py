@@ -1,7 +1,8 @@
 from FileFuncs import getTextFromFile
 from com.unigram import getUnigram
 from decimal import Decimal
-from com.bigrams import getBigrams, getBigramProb, getBigramLaplaceProb
+from com.bigrams import getBigrams, getBigramProb, getBigramLaplaceProb,\
+    getFreqOfFreq, getBigramFreqTuring, getBigramProbTuring
 import math
 
 unigramFrequency = dict()
@@ -16,25 +17,34 @@ def normalizeString(text):
 
 def getSentenceProbability(testInput, withLaplace, withTuring):
     global bigramFrequencyProbability
+    global bigramFrequency
     global freqOfFreq
     
     prob = float(0)
     vocabulary = len(unigramFrequency)
     
     if withTuring == True:
-#         freqOfFreq = getFreqOfFreq(bigramFrequency)
-        print('srg')
+        freqOfFreq, n = getFreqOfFreq(bigramFrequency)
+#         print(bigramFrequency)
+#         print(freqOfFreq)
+        bigramFrequencyTemp = getBigramFreqTuring(bigramFrequency, freqOfFreq)
+#         print(bigramFrequency)
+        bigramFrequencyProbability = getBigramProbTuring(bigramFrequencyTemp, n)
     elif withLaplace == False:
         bigramFrequencyProbability = getBigramProb(bigramFrequency, unigramFrequency)
     else:
         bigramFrequencyProbability = getBigramLaplaceProb(bigramFrequency, unigramFrequency)
-    
+        
     prev = ''
 
     for word in testInput.split():
         if prev != '' :
             if withTuring:  #Calculate probability with good turing
-                print("with turing")
+                if(bigramFrequencyProbability.has_key(prev + ' ' + word)):
+                    prob += math.log(bigramFrequencyProbability.get(prev + ' ' + word))
+#                     print(prob)
+                else:
+                    prob += math.log(float(freqOfFreq.get(1))/float(n))
             else:
                 if withLaplace == False:   #Calculate probability without laplace smoothing
                     if(bigramFrequencyProbability.has_key(prev + ' ' + word)):
@@ -65,8 +75,12 @@ def testBigram(withLaplace, withTuring):
     testInput1 = normalizeString(testInput1)
     testInput2 = normalizeString(testInput2)
     
+    prob1 = 0
+    prob2 = 0
+    
     if(withTuring):
-        print('with turing')
+        prob1 = getSentenceProbability(testInput1, withLaplace, withTuring)
+        prob2 = getSentenceProbability(testInput2, withLaplace, withTuring)
     else:
         prob1 = getSentenceProbability(testInput1, withLaplace, withTuring);
         prob2 = getSentenceProbability(testInput2, withLaplace, withTuring);
@@ -84,4 +98,5 @@ def testBigram(withLaplace, withTuring):
 trainBigram()
 testBigram(False, False) #Without Laplace Smoothing
 testBigram(True, False) #With Laplace Smoothing 
-# testBigram(False, True)
+print('\n')
+testBigram(False, True)

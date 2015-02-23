@@ -1,6 +1,3 @@
-# import re
-# from itertools import islice, izip
-# from collections import Counter
 import math
 
 def getBigrams(text):
@@ -45,4 +42,34 @@ def getBigramLaplaceProb(bigramFreq, unigramFrequency):
 def getFreqOfFreq(bigramFrequency):
     
     freqOfFreq = dict()
-    return freqOfFreq
+    n = 0
+    for key in bigramFrequency.keys():
+        freq = bigramFrequency.get(key)
+        n += freq
+        if freq in freqOfFreq:
+            freqOfFreq[freq] += 1
+        else:
+            freqOfFreq[freq] = 1
+    
+    return freqOfFreq, n
+
+def getBigramFreqTuring(bigramFrequency, freqOfFreq):
+    
+    bigramFreq = {}
+    
+    for key in bigramFrequency.keys():
+        c = bigramFrequency.get(key)
+        if(freqOfFreq.has_key(c + 1)):
+            bigramFreq[key] = float( (c + 1) * (freqOfFreq.get(c + 1)) ) / float(freqOfFreq.get(c))
+        
+    return bigramFreq
+
+def getBigramProbTuring(bigramFrequency, n):
+    bigramFreqProb = {}
+    for key1 in bigramFrequency.keys():
+        count = bigramFrequency.get(key1)
+        bigramFreqProb[key1] = float(count) / float(n)
+        
+    return bigramFreqProb
+
+    
